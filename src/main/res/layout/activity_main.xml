@@ -11,4 +11,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
+    <Button
+        android:id="@+id/login"
+        android:text="用qq登陆"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/login2"
+        android:text="sina登陆"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
 </android.support.constraint.ConstraintLayout>

@@ -4,8 +4,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
+import java.util.HashMap;
+
+import cn.sharesdk.framework.Platform;
+import cn.sharesdk.framework.PlatformActionListener;
+import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.onekeyshare.OnekeyShare;
+import cn.sharesdk.sina.weibo.SinaWeibo;
+import cn.sharesdk.tencent.qq.QQ;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -20,9 +28,92 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 showShare();
             }
+       });
+
+        Button login=(Button)findViewById(R.id.login);
+        login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loginQQ();
+            }
+        });
+
+        final Button loginSina=(Button)findViewById(R.id.login2);
+        loginSina.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loginSinaWeibo();
+            }
         });
     }
 
+    /**
+
+     * QQ第三方登录
+
+     */
+
+    private void loginQQ() {
+        Platform qq = ShareSDK.getPlatform(QQ.NAME);
+//回调信息，可以在这里获取基本的授权返回的信息，但是注意如果做提示和UI操作要传到主线程handler里去执行
+        qq.setPlatformActionListener(new PlatformActionListener() {
+
+            @Override
+            public void onError(Platform arg0, int arg1, Throwable arg2) {
+                // TODO Auto-generated method stub
+                arg2.printStackTrace();
+            }
+
+            @Override
+            public void onComplete(Platform arg0, int arg1, HashMap<String, Object> arg2) {
+                // TODO Auto-generated method stub
+                //输出所有授权信息
+                arg0.getDb().exportData();
+            }
+
+            @Override
+            public void onCancel(Platform arg0, int arg1) {
+                // TODO Auto-generated method stub
+
+            }
+        });
+//authorize与showUser单独调用一个即可
+        qq.authorize();//单独授权,OnComplete返回的hashmap是空的
+        qq.showUser(null);//授权并获取用户信息
+//移除授权
+//weibo.removeAccount(true);
+    }
+
+    private void loginSinaWeibo() {
+        Platform weibo = ShareSDK.getPlatform(SinaWeibo.NAME);
+//回调信息，可以在这里获取基本的授权返回的信息，但是注意如果做提示和UI操作要传到主线程handler里去执行
+        weibo.setPlatformActionListener(new PlatformActionListener() {
+
+            @Override
+            public void onError(Platform arg0, int arg1, Throwable arg2) {
+                // TODO Auto-generated method stub
+                arg2.printStackTrace();
+            }
+
+            @Override
+            public void onComplete(Platform arg0, int arg1, HashMap<String, Object> arg2) {
+                // TODO Auto-generated method stub
+                //输出所有授权信息
+                arg0.getDb().exportData();
+            }
+
+            @Override
+            public void onCancel(Platform arg0, int arg1) {
+                // TODO Auto-generated method stub
+
+            }
+        });
+//authorize与showUser单独调用一个即可
+        weibo.authorize();//单独授权,OnComplete返回的hashmap是空的
+        weibo.showUser(null);//授权并获取用户信息
+//移除授权
+//weibo.removeAccount(true);
+    }
     private void showShare() {
         OnekeyShare oks = new OnekeyShare();
         //关闭sso授权
